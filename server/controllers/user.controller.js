@@ -1,8 +1,8 @@
-import { User } from "../models/user.model";
+import { User } from "../models/user.model.js";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import getDataUri from "../utils/datauri";
-import cloudinary from "../utils/cloudinary";
+import getDataUri from "../utils/datauri.js";
+import cloudinary from "../utils/cloudinary.js";
 
 
 export const register = async (req, res) => {
@@ -59,7 +59,7 @@ export const login = async (req, res) => {
             })
         }
 
-        const token = await jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1d' });
+        const token = await jwt.sign({ userId: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
 
         user = {
             _id: user._id,
@@ -96,8 +96,12 @@ export const getProfile = async (req, res) => {
     try {
         const userId = req.params.id;
         let user = await User.findById(userId)
+        return res.status(200).json({
+            message: "Profile retrieved successfully",
+            user   
+        })
     } catch (error) {
-
+      console.log(error);
     }
 }
 
@@ -134,7 +138,7 @@ export const editProfile = async (req, res) => {
     }
 }
 
-export const getSuggestUser = async (req, res) => {
+export const getSuggestedUsers = async (req, res) => {
     try {
         const suggestedUsers = await User.find({ _id: { $ne: req.id } }).select("-password");
         if (!suggestedUsers) {
