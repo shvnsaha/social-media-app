@@ -111,32 +111,36 @@ export const editProfile = async (req, res) => {
         const { bio, gender } = req.body;
         const profilePicture = req.file;
         let cloudResponse;
+
         if (profilePicture) {
             const fileUri = getDataUri(profilePicture);
-            cloudResponse = await cloudinary.uploader.upload(fileUri)
+            cloudResponse = await cloudinary.uploader.upload(fileUri);
         }
-        const user = await User.findById(userId)
+
+        const user = await User.findById(userId).select('-password');
         if (!user) {
             return res.status(404).json({
-                message: "User not found",
+                message: 'User not found.',
                 success: false
-            })
-        }
-
+            });
+        };
         if (bio) user.bio = bio;
         if (gender) user.gender = gender;
-        if (profilePicture) user.profilePicture = cloudResponse.secure_url
+        if (profilePicture) user.profilePicture = cloudResponse.secure_url;
 
-        await user.save()
+        await user.save();
+
         return res.status(200).json({
-            message: "Profile Updated",
+            message: 'Profile updated.',
             success: true,
             user
-        })
+        });
+
     } catch (error) {
         console.log(error);
     }
-}
+};
+
 
 export const getSuggestedUsers = async (req, res) => {
     try {
