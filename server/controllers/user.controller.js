@@ -164,46 +164,42 @@ export const getSuggestedUsers = async (req, res) => {
 
 export const followOrUnfollow = async (req, res) => {
     try {
-        const myId = req.id;
-        const followingId = req.params.id;
-        if (myId === followingId) {
+        const userId = req.id; // patel
+        const followingId = req.params.id; // shivani
+        if (userId === followingId) {
             return res.status(400).json({
-                message: 'You cannot follow/unfollow youself',
+                message: 'You cannot follow/unfollow yourself',
                 success: false
-            })
+            });
         }
-        const user = await User.findById(myId);
-        const targetUser = await User.findById(followingId)
+
+        const user = await User.findById(userId);
+        const targetUser = await User.findById(followingId);
+
         if (!user || !targetUser) {
             return res.status(400).json({
                 message: 'User not found',
                 success: false
-            })
+            });
         }
-
+         
+    //    check isFollowing or not
         const isFollowing = user.following.includes(followingId);
         if (isFollowing) {
-            //    unfollow
+            // unfollow logic 
             await Promise.all([
-                User.updateOne({ _id: myId }, { $pull: { following: followingId } }),
-                User.updateOne({ _id: followingId }, { $pull: { followers: myId } })
+                User.updateOne({ _id: userId }, { $pull: { following: followingId } }),
+                User.updateOne({ _id: followingId }, { $pull: { followers: userId } }),
             ])
-            return res.status(200).josn({
-                message: 'Unfollow successfully',
-                success: true
-            })
+            return res.status(200).json({ message: 'Unfollowed successfully', success: true });
         } else {
-            //  follow
+            // follow logic 
             await Promise.all([
-                User.updateOne({ _id: myId }, { $push: { following: followingId } }),
-                User.updateOne({ _id: followingId }, { $push: { followers: myId } })
+                User.updateOne({ _id: userId }, { $push: { following: followingId } }),
+                User.updateOne({ _id: followingId }, { $push: { followers: userId } }),
             ])
-            return res.status(200).josn({
-                message: 'followed successfully',
-                success: true
-            })
+            return res.status(200).json({ message: 'followed successfully', success: true });
         }
-
     } catch (error) {
         console.log(error);
     }
