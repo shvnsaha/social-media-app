@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineBars } from 'react-icons/ai'
 import { Heart, Home, LogOut, MessageCircle, PlusSquare, Search, TrendingUp } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 import { toast } from "sonner";
 import axiosSecure from "@/api";
 
@@ -87,7 +87,7 @@ const Sidebar = () => {
             </div>
             {/* Sidebar */}
             <div 
-                className={`px-4 fixed border-r border-gray-300 w-64 h-screen ${isActive && '-translate-x-full'
+                className={`z-10 fixed flex flex-col overflow-x-hidden bg-gray-100 md:bg-transparent border-r border-gray-300 w-64 px-2 py-4 inset-y-0 left-0 transform ${isActive && '-translate-x-full'
                     }  md:translate-x-0  transition duration-200 ease-in-out`}
             >
                 {
