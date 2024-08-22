@@ -15,6 +15,7 @@ export const register = async (req, res) => {
             })
         }
 
+    
         const user = await User.findOne({ email })
         if (user) {
             return res.status(401).json({
@@ -31,7 +32,8 @@ export const register = async (req, res) => {
             password: hashedPassword
         })
 
-        return res.status(401).json({
+        
+        return res.status(200).json({
             message: "Account Created successfully",
             success: true
         })
