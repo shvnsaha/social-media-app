@@ -7,12 +7,14 @@ import { Label } from "../components/ui/label";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 
 const Login = () => {
 
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
     const handleSubmit = async (e) => {
         e.preventDefault();

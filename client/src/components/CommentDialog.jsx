@@ -4,8 +4,24 @@ import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "./ui/button";
+import { useState } from "react";
 
 const CommentDialog = ({open,setOpen}) => {
+    const [text, setText] = useState("");
+
+    const changeEventHandler = (e) => {
+        const inputText = e.target.value;
+        if (inputText.trim()) {
+          setText(inputText);
+        } else {
+          setText("");
+        }
+      }
+
+      const sendMessageHandler = async () => {
+        
+        alert(text)
+      }
     return (
         <Dialog open={open}>
             <DialogContent onInteractOutside={() => setOpen(false)} className="max-w-5xl p-0 flex flex-col">
@@ -54,8 +70,8 @@ const CommentDialog = ({open,setOpen}) => {
                         </div>
                         <div className='p-4'>
                             <div className='flex items-center gap-2'>
-                                <input type="text" placeholder='Add a comment...' className='w-full outline-none border text-sm border-gray-300 p-2 rounded' />
-                                <Button  variant="outline">Send</Button>
+                                <input type="text" value={text} onChange={changeEventHandler} placeholder='Add a comment...' className='w-full outline-none border text-sm border-gray-300 p-2 rounded' />
+                                <Button  disabled={!text.trim()} onClick={sendMessageHandler} variant="outline">Send</Button>
                             </div>
                         </div>
                     </div>
