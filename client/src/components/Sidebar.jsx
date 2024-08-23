@@ -8,6 +8,7 @@ import axiosSecure from "@/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthUser } from "@/redux/slice/authSlice";
 import CreatePost from "./CreatePost";
+import { setPosts, setSelectedPost } from "@/redux/slice/postSlice";
 
 
 
@@ -31,7 +32,9 @@ const Sidebar = () => {
         try {
           const res = await axiosSecure('/user/logout');
           if(res.data.success){
-            dispatch(setAuthUser(null))
+            dispatch(setAuthUser(null));
+                dispatch(setSelectedPost(null));
+                dispatch(setPosts([]));
             navigate('/login')
             toast.success(res.data.message)
         }

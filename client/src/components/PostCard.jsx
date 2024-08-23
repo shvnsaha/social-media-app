@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
-import {  MessageCircle, MoreHorizontal, Send } from "lucide-react";
+import {   MessageCircle, MoreHorizontal, Send } from "lucide-react";
+import { Badge } from './ui/badge'
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
@@ -8,7 +9,7 @@ import CommentDialog from "./CommentDialog";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axiosSecure from "@/api";
-import { setPosts } from "@/redux/slice/postSlice";
+import { setPosts, setSelectedPost } from "@/redux/slice/postSlice.js";
 import { toast } from "sonner";
 
 
@@ -20,6 +21,7 @@ const PostCard = ({post}) => {
     const { posts } = useSelector(store => store.post);
     const [liked, setLiked] = useState(post.likes.includes(user?._id) || false);
     const [postLike, setPostLike] = useState(post.likes.length);
+    const [comment, setComment] = useState(post.comments);
     const dispatch = useDispatch();
 
     const changeEventHandler = (e) => {
@@ -56,6 +58,26 @@ const PostCard = ({post}) => {
         }
     }
 
+    const commentHandler = async () => {
+
+        try {
+            const res = await axiosSecure.post(`/post/${post._id}/comment`, { text });
+            if (res.data.success) {
+                const updatedCommentData = [...comment, res.data.comment];
+                setComment(updatedCommentData);
+
+                const updatedPostData = posts.map(p =>
+                    p._id === post._id ? { ...p, comments: updatedCommentData } : p
+                );
+
+                dispatch(setPosts(updatedPostData));
+                toast.success(res.data.message);
+                setText("");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
    
     const deletePostHandler = async () => {
         try {
@@ -81,7 +103,7 @@ const PostCard = ({post}) => {
                     </Avatar>
                     <div className='flex items-center gap-3'>
                         <h1>{post.author?.username}</h1>
-                        {/* {user?._id === post.author._id && <Badge variant="secondary">Author</Badge>} */}
+                        {user?._id === post.author._id && <Badge variant="secondary">Author</Badge>}
                     </div>
                 </div>
                 <Dialog>
@@ -114,7 +136,7 @@ const PostCard = ({post}) => {
                     }
 
                     <MessageCircle onClick={() => {
-                        // dispatch(setSelectedPost(post));
+                        dispatch(setSelectedPost(post));
                         setOpen(true);
                     }} className='cursor-pointer hover:text-gray-600' />
                     <Send className='cursor-pointer hover:text-gray-600' />
@@ -127,12 +149,12 @@ const PostCard = ({post}) => {
                  caption
             </p>
             {
-                // comment.length > 0 && (
+                 comment.length > 0 && (
                     <span onClick={() => {
-                        // dispatch(setSelectedPost(post));
+                        dispatch(setSelectedPost(post));
                         setOpen(true);
-                    }} className='cursor-pointer text-sm text-gray-400'>View all 70 comments</span>
-                // )
+                    }} className='cursor-pointer text-sm text-gray-400'>View all {comment.length} comments</span>
+                )
             }
             <CommentDialog open={open} setOpen={setOpen} />
             <div className='flex items-center justify-between'>
@@ -143,9 +165,9 @@ const PostCard = ({post}) => {
                     onChange={changeEventHandler}
                     className='outline-none text-sm w-full'
                 />
-                {/* {
+                {
                     text && <span onClick={commentHandler} className='text-[#3BADF8] cursor-pointer'>Post</span>
-                } */}
+                }
 
             </div>
         </div>
