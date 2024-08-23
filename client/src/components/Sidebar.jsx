@@ -2,9 +2,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineBars } from 'react-icons/ai'
 import { Heart, Home, LogOut, MessageCircle, PlusSquare, Search, TrendingUp } from "lucide-react";
-import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { toast } from "sonner";
 import axiosSecure from "@/api";
+import { useDispatch, useSelector } from "react-redux";
+import { setAuthUser } from "@/redux/slice/authSlice";
+import CreatePost from "./CreatePost";
 
 
 
@@ -12,6 +15,9 @@ import axiosSecure from "@/api";
 const Sidebar = () => {
     const navigate = useNavigate()
     const [isActive, setActive] = useState(false)
+    const { user } = useSelector(store => store.auth);
+    const dispatch = useDispatch();
+    const [open, setOpen] = useState(false);
 
 
 
@@ -25,6 +31,7 @@ const Sidebar = () => {
         try {
           const res = await axiosSecure('/user/logout');
           if(res.data.success){
+            dispatch(setAuthUser(null))
             navigate('/login')
             toast.success(res.data.message)
         }
@@ -33,11 +40,13 @@ const Sidebar = () => {
         }
     }
 
+
+
     const sidebarHandler = (textType) => {
         if (textType === 'Logout') {
             logoutHandler();
         } else if (textType === "Create") {
-            // setOpen(true);
+            setOpen(true);
         } else if (textType === "Profile") {
             // navigate(`/profile/${user?._id}`);
         } else if (textType === "Home") {
@@ -57,7 +66,7 @@ const Sidebar = () => {
         {
             icon: (
                 <Avatar className='w-6 h-6'>
-                    {/* <AvatarImage src={user?.profilePicture} alt="@shadcn" /> */}
+                    <AvatarImage src={user?.profilePicture} alt="@shadcn" />
                     <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
             ),
@@ -105,6 +114,8 @@ const Sidebar = () => {
 
                 </div>
             </div>
+
+            <CreatePost open={open} setOpen={setOpen} />
         </>
     )
 }

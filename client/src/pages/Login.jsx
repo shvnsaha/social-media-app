@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { setAuthUser } from "@/redux/slice/authSlice";
 
 
 const Login = () => {
@@ -30,12 +31,14 @@ const Login = () => {
         try {
             setLoading(true)
             const res = await axiosSecure.post('/user/login', userData)
-            if (res.data.success) {
-                toast.success(res.data.message)
-                navigate('/')
-            }
+            if (res && res.data) {
+                if (res.data.success) {
+                    dispatch(setAuthUser(res?.data?.user));
+                    toast.success(res.data.message);
+                    navigate('/');
+                }}
         } catch (error) {
-            toast.error(error.response.data.message);
+            toast.error(error?.response?.data?.message);
         } finally {
             setLoading(false)
         }
