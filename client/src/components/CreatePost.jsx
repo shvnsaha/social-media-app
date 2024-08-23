@@ -10,6 +10,7 @@ import { Loader2 } from "lucide-react";
 import { readFileAsDataURL } from "@/lib/utils.js";
 import axiosSecure from "@/api";
 import { toast } from "sonner";
+import { setPosts } from "@/redux/slice/postSlice";
 
 
 const CreatePost = ({open,setOpen}) => {
@@ -19,7 +20,7 @@ const CreatePost = ({open,setOpen}) => {
     const [imagePreview, setImagePreview] = useState("");
     const [loading, setLoading] = useState(false);
     const {user} = useSelector(store=>store.auth);
-    // const {posts} = useSelector(store=>store.post);
+    const {posts} = useSelector(store=>store.post);
     const dispatch = useDispatch();
 
 
@@ -40,7 +41,7 @@ const CreatePost = ({open,setOpen}) => {
           setLoading(true);
            const res = await axiosSecure.post('/post/addpost', formData);
           if (res.data.success) {
-            // dispatch(setPosts([res.data.post, ...posts]));// [1] -> [1,2] -> total element = 2
+            dispatch(setPosts([res.data.post, ...posts]));// [1] -> [1,2] -> total element = 2
             toast.success(res.data.message);
             setOpen(false);
           }

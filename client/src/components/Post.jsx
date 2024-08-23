@@ -1,11 +1,14 @@
+import { useSelector } from "react-redux";
 import PostCard from "./PostCard";
 
 
 const Post = () => {
+    const {posts} = useSelector(store=>store.post);
+
     return (
         <div>
            {
-            [1,2,3].map((item,index)=><PostCard key={index}></PostCard>)
+            posts.map((post)=><PostCard key={post?._id} post={post}></PostCard>)
            }
         </div>
     );
