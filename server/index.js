@@ -16,6 +16,7 @@ dotenv.config()
 const PORT = process.env.PORT || 5000
 
 const __dirname = path.resolve();
+console.log(__dirname);
 
 app.get("/",(req,res)=>{
     return res.status(200).json({
