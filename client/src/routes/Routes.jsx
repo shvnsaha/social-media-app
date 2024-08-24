@@ -1,6 +1,7 @@
 import EditProfile from "@/components/EditProfile";
 import Profile from "@/components/Profile";
 import MainLayout from "@/layout/MainLayout";
+import ChatPage from "@/pages/ChatPage";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
               {
                 path: '/account/edit',
                 element: <EditProfile />
+              },
+              {
+                path: '/chat',
+                element: <ChatPage />
               },
         ]
     },
