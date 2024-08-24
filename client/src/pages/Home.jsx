@@ -9,7 +9,7 @@ const Home = () => {
     useGetSuggestedUsers();
     return (
         <div className="flex">
-            <div className="flex-grow">
+            <div className="flex-grow ">
                  <Feed></Feed>
             </div>
             <RightSideBar></RightSideBar>

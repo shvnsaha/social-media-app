@@ -1,3 +1,4 @@
+import Profile from "@/components/Profile";
 import MainLayout from "@/layout/MainLayout";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
@@ -14,7 +15,11 @@ const router = createBrowserRouter([
             {
                 path: '/',
                 element: <Home/>
-            }
+            },
+            {
+                path: '/profile/:id',
+                element: <Profile />
+              },
         ]
     },
     {
