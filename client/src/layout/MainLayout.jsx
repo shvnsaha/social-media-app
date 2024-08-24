@@ -1,5 +1,6 @@
 import Sidebar from "@/components/Sidebar";
 import { setOnlineUsers } from "@/redux/slice/chatSlice";
+import { setLikeNotification } from "@/redux/slice/rtnSlice";
 import { setSocket } from "@/redux/slice/socketSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,9 +29,9 @@ const MainLayout = () => {
             dispatch(setOnlineUsers(onlineUsers));
           });
     
-        //   socketio.on('notification', (notification) => {
-        //     dispatch(setLikeNotification(notification));
-        //   });
+          socketio.on('notification', (notification) => {
+            dispatch(setLikeNotification(notification));
+          });
     
           return () => {
             socketio.close();

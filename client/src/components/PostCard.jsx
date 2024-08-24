@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import {   MessageCircle, MoreHorizontal, Send } from "lucide-react";
+import {   Bookmark, MessageCircle, MoreHorizontal, Send } from "lucide-react";
 import { Badge } from './ui/badge'
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -93,6 +93,17 @@ const PostCard = ({post}) => {
         }
     }
 
+    const bookmarkHandler = async () => {
+        try {
+            const res = await axiosSecure(`/post/${post?._id}/bookmark`);
+            if(res.data.success){
+                toast.success(res.data.message);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div className='my-8 w-full max-w-sm mx-auto'>
             <div className='flex items-center justify-between'>
@@ -112,7 +123,7 @@ const PostCard = ({post}) => {
                     </DialogTrigger>
                     <DialogContent className="flex flex-col items-center text-sm text-center">
                         {
-                            <Button variant='ghost' className="cursor-pointer w-fit text-[#ED4956] font-bold">Unfollow</Button>
+                            post?.author?._id !== user?._id && <Button variant='ghost' className="cursor-pointer w-fit text-[#ED4956] font-bold">Unfollow</Button>
                         }
 
                         <Button variant='ghost' className="cursor-pointer w-fit">Add to favorites</Button>
@@ -141,7 +152,7 @@ const PostCard = ({post}) => {
                     }} className='cursor-pointer hover:text-gray-600' />
                     <Send className='cursor-pointer hover:text-gray-600' />
                 </div>
-                {/* <Bookmark onClick={bookmarkHandler} className='cursor-pointer hover:text-gray-600' /> */}
+                <Bookmark onClick={bookmarkHandler} className='cursor-pointer hover:text-gray-600' />
             </div>
             <span className='font-medium block mb-2'>{postLike} likes</span>
             <p>

@@ -8,27 +8,28 @@ import Signup from "@/pages/Signup";
 import {
     createBrowserRouter,
   } from "react-router-dom";
+import PrivateRoutes from "./PrivateRoutes";
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <MainLayout></MainLayout>,
+        element: <PrivateRoutes><MainLayout></MainLayout></PrivateRoutes>,
         children:[
             {
                 path: '/',
-                element: <Home/>
+                element: <PrivateRoutes><Home/></PrivateRoutes>
             },
             {
                 path: '/profile/:id',
-                element: <Profile />
+                element: <PrivateRoutes><Profile /></PrivateRoutes>
               },
               {
                 path: '/account/edit',
-                element: <EditProfile />
+                element: <PrivateRoutes><EditProfile /></PrivateRoutes>
               },
               {
                 path: '/chat',
-                element: <ChatPage />
+                element: <PrivateRoutes><ChatPage /></PrivateRoutes>
               },
         ]
     },
